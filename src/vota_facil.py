@@ -139,7 +139,8 @@ for opcao in OPCOES:
         confirmar_voto_dialog()
 
 for opcao in DESCRICAO.keys():
-    st.write('**{}**:{}'.format(opcao, DESCRICAO[opcao]))
+    st.write('**{}**: {}'.format(opcao, DESCRICAO[opcao]))
+
 st.divider()
 df = carregar_votos()
 st.subheader('Resultado Parcial - {} participantes'.format(len(df)))
