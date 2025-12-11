@@ -6,6 +6,11 @@ from googleapiclient.discovery import build
 
 import time
 
+BLOQUEIO_SEGUNDOS = 10  # ajuste como quiser
+def botoes_bloqueados():
+    agora = time.time()
+    return (agora - st.session_state.ultima_acao) < BLOQUEIO_SEGUNDOS
+
 # --------------------------
 # CONFIGURAÇÕES
 # --------------------------
