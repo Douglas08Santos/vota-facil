@@ -6,12 +6,6 @@ from googleapiclient.discovery import build
 
 import time
 
-BLOQUEIO_SEGUNDOS = 10  # ajuste como quiser
-
-def botoes_bloqueados():
-    agora = time.time()
-    return (agora - st.session_state.ultima_acao) < BLOQUEIO_SEGUNDOS
-
 # --------------------------
 # CONFIGURAÇÕES
 # --------------------------
@@ -62,17 +56,6 @@ def carregar_votos():
 
     return pd.DataFrame(values[1:], columns=['timestamp', 'opcao'])
 
-
-# --------------------------
-# QR CODE
-# --------------------------
-def gerar_qrcode(url):
-    img = qrcode.make(url)
-    path = 'qrcode.png'
-    img.save(path)
-    return path
-
-
 # --------------------------
 # INTERFACE
 # --------------------------
@@ -119,18 +102,20 @@ st.subheader("Escolha sua opção:")
 bloqueado = botoes_bloqueados()
 
 if bloqueado:
-    restante = BLOQUEIO_SEGUNDOS - int(time.time() - st.session_state.ultima_acao)
-    #st.info(f"Aguarde {restante} segundos para votar novamente.")
     st.info(f"Voto registrado, atualize a página se deseja votar novamente.")
 
 st.markdown("""
-    <style>
-    button {
-        height: 70px !important; 
-        padding-top: 10px !important; 
-        padding-bottom: 10px !important; 
-    }
-    </style>
+<style>
+    button[kind='secondary'] {
+    border-radius: 12px !important;
+    padding: 18px !important;
+    font-size: 16px !important;
+    font-weight: 600 !important;
+    height: 80px !important;
+    border: 2px solid #ddd !important;
+    white-space: normal !important;
+}
+</style>
     """, unsafe_allow_html=True)
 
 for opcao in OPCOES:
@@ -144,30 +129,8 @@ for opcao in DESCRICAO.keys():
 st.divider()
 df = carregar_votos()
 st.subheader('Resultado Parcial - {} participantes'.format(len(df)))
-df = carregar_votos()
 if not df.empty:
     contagem = df['opcao'].value_counts().reindex(OPCOES, fill_value=0)
     st.bar_chart(contagem, )
 else:
     st.write('Ainda sem votos.')
-
-
-st.divider()
-
-
-url_app = ('https://consulta-publica.streamlit.app')
-qr_path = gerar_qrcode(url_app)
-
-# --------------------------
-# POP-UP (MODAL) DE QR CODE
-# --------------------------
-@st.dialog('QR Code para Votação')
-def mostrar_qrcode():
-    st.markdown('### 📱 Aponte a câmera do celular para votar')
-    st.image(qr_path, use_container_width=True)
-    st.write('Clique fora do diálogo para fechar.')
-
-
-#st.subheader('Compartilhe com o público')
-#if st.button('Mostrar QR Code em Tela Cheia', type='primary', use_container_width=True):
-#    mostrar_qrcode()
