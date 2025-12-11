@@ -19,9 +19,9 @@ st.set_page_config(page_title='Vota Fácil', layout='centered')
 
 OPCOES = ['Alumia', 'Lumia', 'Luzia']
 DESCRICAO = {
-    'Alumia': '<Descrição Alumia>',
-    'Lumia': '<Descrição Lumia>',
-    'Luzia': '<Descrição Luzia>',
+    'Alumia': 'Um termo regionalizado, muito presente na fala do nosso povo, que lembra o verbo “alumiar”, de iluminar, clarear o que está obscuro – exatamente o que se espera do controle externo sobre as informações governamentais.',
+    'Lumia': 'Remete a “lumen”, do latim, e a termos de línguas modernas associados à claridade.',
+    'Luzia': 'Um nome feminino, que humaniza a tecnologia e aproxima o sistema das pessoas. “Luzia” evoca também Santa Luzia, tradicionalmente associada à visão, à capacidade de enxergar com clareza, dialogando com a missão de ver melhor as contas públicas e ampliar a transparência.',
 }
 SPREADSHEET_ID = st.secrets['sheets']['SPREADSHEET_ID']
 
@@ -85,13 +85,9 @@ if 'opcao_selecionada' not in st.session_state:
 
 if "ultima_acao" not in st.session_state:
     st.session_state.ultima_acao = 0
-
-
-
 # --------------------------
 # DIALOG DE CONFIRMAÇÃO
 # --------------------------
-
 @st.dialog('Confirmar voto')
 def confirmar_voto_dialog():
     opcao = st.session_state.opcao_selecionada
@@ -124,7 +120,8 @@ bloqueado = botoes_bloqueados()
 
 if bloqueado:
     restante = BLOQUEIO_SEGUNDOS - int(time.time() - st.session_state.ultima_acao)
-    st.info(f"Aguarde {restante} segundos para votar novamente.")
+    #st.info(f"Aguarde {restante} segundos para votar novamente.")
+    st.info(f"Voto registrado, atualize a página se deseja votar novamente.")
 
 st.markdown("""
     <style>
@@ -156,7 +153,7 @@ else:
 st.divider()
 
 
-url_app = ('http://localhost:8501')
+url_app = ('https://consulta-publica.streamlit.app')
 qr_path = gerar_qrcode(url_app)
 
 # --------------------------
