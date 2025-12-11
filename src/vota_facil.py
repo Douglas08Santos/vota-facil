@@ -77,7 +77,7 @@ def gerar_qrcode(url):
 # INTERFACE
 # --------------------------
 
-st.title('Votação para o nome do projeto PNTP usando IA do TCE-RN')
+st.subheader('Nome do projeto - Validação PNTP TCE/RN')
 
 # Variável de estado para controlar a opção escolhida
 if 'opcao_selecionada' not in st.session_state:
@@ -138,10 +138,11 @@ for opcao in OPCOES:
         st.session_state.opcao_selecionada = opcao
         confirmar_voto_dialog()
 
-
+for opcao in DESCRICAO.keys():
+    st.write('**{}**:{}'.format(opcao, DESCRICAO[opcao]))
 st.divider()
-st.subheader('📊 Resultado Parcial')
-
+df = carregar_votos()
+st.subheader('Resultado Parcial - {} participantes'.format(len(df)))
 df = carregar_votos()
 if not df.empty:
     contagem = df['opcao'].value_counts().reindex(OPCOES, fill_value=0)
@@ -166,6 +167,6 @@ def mostrar_qrcode():
     st.write('Clique fora do diálogo para fechar.')
 
 
-st.subheader('📱 Compartilhe com o público')
-if st.button('Mostrar QR Code em Tela Cheia', type='primary', use_container_width=True):
-    mostrar_qrcode()
+#st.subheader('Compartilhe com o público')
+#if st.button('Mostrar QR Code em Tela Cheia', type='primary', use_container_width=True):
+#    mostrar_qrcode()
